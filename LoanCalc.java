@@ -1,86 +1,68 @@
+// Computes the periodical payment necessary to pay a given loan.
 public class LoanCalc {
+	
+	static double epsilon = 0.001;  // Approximation accuracy
+	static int iterationCounter;    // Number of iterations 
+	
+	// Gets the loan data and computes the periodical payment.
+    // Expects to get three command-line arguments: loan amount (double),
+    // interest rate (double, as a percentage), and number of payments (int).  
+	public static void main(String[] args) {		
+		// Gets the loan data
+		double loan = Double.parseDouble(args[0]);
+		double rate = Double.parseDouble(args[1]);
+		int n = Integer.parseInt(args[2]);
+		System.out.println("Loan = " + loan + ", interest rate = " + rate + "%, periods = " + n);
 
-    static double epsilon = 0.001; // Approximation accuracy
-    static int iterationCounter;  // Number of iterations 
+		// Computes the periodical payment using brute force search
+		System.out.print("\nPeriodical payment, using brute force: ");
+		System.out.println((int) bruteForceSolver(loan, rate, n, epsilon));
+		System.out.println("number of iterations: " + iterationCounter);
 
-    public static void main(String[] args) {	
-        if (args.length < 3) {
-            System.out.println("Error: Please provide three arguments: loan amount, interest rate, and number of payments.");
-            return;
-        }
+		// Computes the periodical payment using bisection search
+		System.out.print("\nPeriodical payment, using bi-section search: ");
+		System.out.println((int) bisectionSolver(loan, rate, n, epsilon));
+		System.out.println("number of iterations: " + iterationCounter);
+	}
 
-        double loan;
-        double rate;
-        int n;
-
-        try {
-            loan = Double.parseDouble(args[0]);
-            rate = Double.parseDouble(args[1]);
-            n = Integer.parseInt(args[2]);
-
-            if (loan <= 0 || rate < 0 || n <= 0) {
-                System.out.println("Error: Loan amount, rate, and number of payments must be positive.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Error: Invalid input. Loan and rate should be numbers; periods should be an integer.");
-            return;
-        }
-
-        System.out.printf("Loan = %.1f, interest rate = %.1f%%, periods = %d%n", loan, rate, n);
-
-        double payment = 10000;
-        double endBalance = endBalance(loan, rate, n, payment);
-        System.out.printf("If your periodical payment is %.2f, your ending balance is: %.2f%n", payment, endBalance);
-
-        System.out.printf("%nPeriodical payment (brute force): %.2f%n", bruteForceSolver(loan, rate, n, epsilon));
-        System.out.printf("Number of iterations: %d%n", iterationCounter);
-
-        System.out.printf("%nPeriodical payment (bisection): %.2f%n", bisectionSolver(loan, rate, n, epsilon));
-        System.out.printf("Number of iterations: %d%n", iterationCounter);
-    }
-
-    private static double endBalance(double loan, double rate, int n, double payment) {	
-        double balance = loan;
-        for (int i = 0; i < n; i++) {
-            balance = balance * (1 + (rate / 100) / 12) - payment; // Apply monthly interest rate
-        }
-        return balance;
-    }
-
-    public static double bruteForceSolver(double loan, double rate, int n, double epsilon) {  
-        iterationCounter = 0;
-        double payment = loan / n;
-        double balance = endBalance(loan, rate, n, payment);
-
-        while (Math.abs(balance) > epsilon) { // Adjust stopping condition
-            payment += epsilon;
-            iterationCounter++;
-            balance = endBalance(loan, rate, n, payment);
-        }
-
-        return payment;
-    }
-
-    public static double bisectionSolver(double loan, double rate, int n, double epsilon) {  
-        iterationCounter = 0;
-        double low = loan / n;
-        double high = loan;
-        double mid = (low + high) / 2.0;
-
-        while ((high - low) > epsilon) {
-            double balance = endBalance(loan, rate, n, mid);
-
-            if (balance > 0) {
-                low = mid; // Increase payment
-            } else {
-                high = mid; // Decrease payment
-            }
-
-            mid = (low + high) / 2.0;
-            iterationCounter++;
-        }
-
-        return mid;
-    }
+	// Computes the ending balance of a loan, given the loan amount, the periodical
+	// interest rate (as a percentage), the number of periods (n), and the periodical payment.
+	private static double endBalance(double var0, double var2, int var4, double var5) {
+		for(int var7 = 0; var7 < var4; ++var7) {
+		   var0 = var0 - var5 + (var0 - var5) * (var2 / 100.0);
+		}
+  
+		return var0;
+	 }
+  
+	 public static double bruteForceSolver(double var0, double var2, int var4, double var5) {
+		iterationCounter = 0;
+		double var7 = var0 / (double)var4;
+  
+		for(double var9 = endBalance(var0, var2, var4, var7); var9 > 0.0; ++iterationCounter) {
+		   var7 += var5;
+		   var9 = endBalance(var0, var2, var4, var7);
+		}
+  
+		return var7;
+	 }
+  
+	 public static double bisectionSolver(double var0, double var2, int var4, double var5) {
+		iterationCounter = 0;
+		double var7 = var0 / (double)var4;
+		double var9 = var0;
+  
+		double var11;
+		for(var11 = (var7 + var0) / 2.0; var9 - var7 > var5; ++iterationCounter) {
+		   if (endBalance(var0, var2, var4, var11) * endBalance(var0, var2, var4, var7) > 0.0) {
+			  var7 = var11;
+		   } else {
+			  var9 = var11;
+		   }
+  
+		   var11 = (var7 + var9) / 2.0;
+		}
+  
+		return var11;
+	}
 }
