@@ -90,19 +90,40 @@ public class Algebra {
 
 	// Returns the integer part of x1 / x2 
 	public static int div(int x1, int x2) {
-		int count = 1;
-		int ans = 1;
-
-		while (ans < minus(x1,x2)) {
-			ans = times(x2, count);
+		int count = 0;
+		boolean isNegative = false;
+	
+		if (x1 < 0 && x2 > 0) {
+			isNegative = true;
+			x1 = minus(0, x1);
+		} else if (x2 < 0 && x1 > 0) {
+			isNegative = true;
+			x2 = minus(0, x2);
+		} else if (x1 < 0 && x2 < 0) {
+			x1 = minus(0, x1);
+			x2 = minus(0, x2);
+		}
+	
+		while (x1 >= x2) {
+			x1 = minus(x1, x2);
 			count++;
 		}
+	
+		if (isNegative) {
+			count = minus(0, count);
+		}
+	
 		return count;
 	}
 
 
 	// Returns x1 % x2
 	public static int mod(int x1, int x2) {
+		
+		if (x2 == 0) {
+			System.out.println("Modulo by zero is undefined.");
+			return -1;
+		}
 		int count = 1;
 		int ans = 1;
 		while (ans < minus(x1,x2)) {
