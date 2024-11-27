@@ -63,6 +63,10 @@ public class Algebra {
 	public static int div(int x1, int x2) {
 		int count = 1;
 		int ans = 1;
+
+		if (x2 == 0){
+			System.out.println("ERROR");
+		} else {
 		while (ans < minus(x1,x2)) {
 			ans = times(x2, count);
 			count++;
