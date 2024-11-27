@@ -123,22 +123,23 @@ public class Algebra {
 		if (x2 == 0) {
 			System.out.println("Modulo by zero is undefined.");
 			return -1;
-		}
-		int count = 1;
-		int ans = 1;
-		while (ans < minus(x1,x2)) {
-			ans = times(x2, count);
-			count++;
-		}
-
-		ans = minus(x1, ans);
-
-		if (ans != x2){
-		return ans;
 		} else {
-			return 0;
-		}
-	}	
+			int count = 1;
+			int ans = 1;
+			while (ans < minus(x1,x2)) {
+				ans = times(x2, count);
+				count++;
+			}
+
+			ans = minus(x1, ans);
+
+			if (ans != x2){
+				return ans;
+			} else {
+				return 0;
+			}
+		}	
+	}
 
 	// Returns the integer part of sqrt(x) 
 	public static int sqrt(int x) {
