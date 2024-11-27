@@ -57,14 +57,14 @@ public class Algebra {
 	public static int times(int x1, int x2) {
 		int ans = 0;
 
-		if (x1 > 0 && x2 > 0){
-			for (int i = 0; i < x2; i++){
-				ans = plus(ans,x1);
-			} 
-		} else {
+		if (x1 < 0 || x2 < 0){
 			for (int i = 0; i < x2; i++){
 				ans = minus(ans,x1);
-			}
+			} 
+		} else {
+			
+			}for (int i = 0; i < x2; i++){
+				ans = plus(ans,x1);
 		}
 		return ans;
 	}
