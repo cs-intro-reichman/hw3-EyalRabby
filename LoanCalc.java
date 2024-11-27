@@ -27,7 +27,7 @@ public class LoanCalc {
             return;
         }
 
-        System.out.printf("Loan = %.2f, Interest Rate = %.2f%%, Periods = %d%n", loan, rate, n);
+        System.out.printf("Loan = %.1f, interest rate = %.1f%%, periods = %d%n", loan, rate, n);
 
         double payment = 10000;
         double endBalance = endBalance(loan, rate, n, payment);
@@ -43,7 +43,7 @@ public class LoanCalc {
     private static double endBalance(double loan, double rate, int n, double payment) {	
         double balance = loan;
         for (int i = 0; i < n; i++) {
-            balance = balance * (1 + rate / 100) - payment;
+            balance = balance * (1 + (rate / 100) / 12) - payment; // Apply monthly interest rate
         }
         return balance;
     }
@@ -53,7 +53,7 @@ public class LoanCalc {
         double payment = loan / n;
         double balance = endBalance(loan, rate, n, payment);
 
-        while (balance > epsilon) {
+        while (Math.abs(balance) > epsilon) { // Adjust stopping condition
             payment += epsilon;
             iterationCounter++;
             balance = endBalance(loan, rate, n, payment);
