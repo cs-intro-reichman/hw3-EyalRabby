@@ -120,26 +120,23 @@ public class Algebra {
 	// Returns x1 % x2
 	public static int mod(int x1, int x2) {
 		
-		if (x2 == 0) {
-			System.out.println("Modulo by zero is undefined.");
-			return -1;
-		} else {
-			int count = 1;
-			int ans = 1;
-			while (ans < minus(x1,x2)) {
-				ans = times(x2, count);
-				count++;
-			}
+		int count = 1;
+		int ans = 1;
+		if (x1 == 0) return 0;
+		
+		while (ans < minus(x1,x2)) {
+			ans = times(x2, count);
+			count++;
+		}
 
-			ans = minus(x1, ans);
-
+		ans = minus(x1, ans);
 			if (ans != x2){
 				return ans;
 			} else {
 				return 0;
 			}
 		}	
-	}
+	
 
 	// Returns the integer part of sqrt(x) 
 	public static int sqrt(int x) {
